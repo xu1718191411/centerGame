@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="onsenui/css/onsenui.css">
     <link rel="stylesheet" href="onsenui/css/onsen-css-components.min.css">
     <script src="onsenui/js/onsenui.min.js"></script>
+    <script src="./ncmb/ncmb.min.js"></script>
+    <script src="./db.js"></script>
     <script src="angular.min.js"></script>
     <script src="onsenui/js/angular-onsenui.min.js"></script>
 
@@ -52,92 +54,72 @@
     </style>
 </head>
 
-<body>
-    <ons-page ng-controller="GameController">
-
-        <ons-row>
-            <div class="toolbar">
-                <div class="toolbar__center">PTGAME</div>
-            </div>
-        </ons-row>
-
-
-        <ons-row>
-            <ons-col width="100%">
-                <div style="width:100%;height: 200px; padding: 1px 0 0 0;">
-                    <ons-row>
-                        <ons-col width="10%">
-                            <div class="arrowL" ng-click="back()"></div>
-                        </ons-col>
-
-                        <ons-col width="80%">
-                            <div class="card">
-                                <h2 class="card__title">第{{currentNum+1}}問</h2>
-                                <div class="card__content">
-                                    {{gameData[currentNum].title}}
-                                </div>
-                            </div>
-                        </ons-col>
-
-
-                        <ons-col width="10%">
-                            <div class="arrow" ng-click="forward()"></div>
-                        </ons-col>
-                    </ons-row>
-                </div>
-
-            </ons-col>
-        </ons-row>
-
-        <ons-row>
-            <button class="button--large--cta" style="width: 100%; margin: 0 auto;">サブミット</button>
-        </ons-row>
+<body ng-app>
 
 
 
-    </ons-page>
+    <ons-navigator animation="slide" var="app.navi" page="game.page">
+
+    </ons-navigator>
+
+
+    <ons-template id="game.page">
+        <ons-page ng-controller="GameController">
+            <ng-include src="'./game.html'"></ng-include>
+        </ons-page>
+    </ons-template>
+
 
 </body>
 
 <script>
+    var APPLICATION_KEY = "e49d2a7325b1de31930285ecfceb148c6c07bd1b0ff87cc9ccb3e6836aeb7151";
+    var CLIENT_KEY = "4c5ff454f2fbf0bb0ed2b4088fa54f37602aba3744e6d6bc079a3886c44aa4e3";
+    var ncmb = new NCMB(APPLICATION_KEY, CLIENT_KEY);
+
+
     ons.bootstrap()
         .controller('GameController', function($scope) {
 
+            getCurrentLoginInfo();
             $scope.currentNum = 0;
             $scope.gameData = [{
-                    num: 0,
-                    title: "　ロックバンド「ＯＮＥ　ＯＫ　ＲＯＣＫ」が１１日に英グラスゴーで予定していたライブを大雪のため中止した。公式ツイッターで発表した。"
-                }, {
-                    num: 1,
-                    title: "英各地は大雪に見舞われ、交通機関に乱れ。ワンオクの公式ツイッターも「交通や物流の問題のため」としている。"
-                }, {
-                    num: 2,
-                    title: "ワンオクは今月１日からヨーロッパツアー中。９日にデンマーク公演（コペンハーゲン）を行い、この日からグラスゴー（１１日）、マンチェスター（１２日）、ロンドン（１３日）と英国公演。その後、今月２２日までドイツ公演、オーストリア公演、オランダ公演、フランス公演が控える。"
-                }, {
-                    num: 3,
-                    title: "テレビ東京の金曜深夜のドラマ枠「ドラマ２４」が１８年１月クールで５０作目の記念を迎えるにあたり、同じく１８年が創刊５０周年となる少年漫画雑誌「週刊少年ジャンプ」（集英社）と豪華コラボすることが１０日、分かった。"
-                }, {
-                    num: 4,
-                    title: "同編集部が全面協力のもと特別企画の連続ドラマ「オー・マイ・ジャンプ～少年ジャンプが地球を救う～」（１月１２日スタート、金曜、深夜０・１２）を放送するもの。"
-                }, {
-                    num: 5,
-                    title: "劇中には少年ジャンプの最新作や過去の名作が登場するなど“ジャンプ愛”が詰まった物語となる。(デイリースポーツ)"
-                }
-
-            ]
+                num: 0,
+                title: "　「休日朝起きる時間」→チュートリアル"
+            }, {
+                num: 1,
+                title: "「通勤時間」"
+            }, {
+                num: 2,
+                title: "「理想の年収」"
+            }, {
+                num: 3,
+                title: "「自分の今年一番の買い物の値段」"
+            }, {
+                num: 4,
+                title: "「香川さんの一番の買い物の値段は？」"
+            }, {
+                num: 5,
+                title: "劇中には少年ジャンプの最新作や過去の名作が登場するなど“ジャンプ愛”が詰まった物語となる。(デイリースポーツ)"
+            }]
 
             $scope.forward = function() {
-
-
                 if ($scope.currentNum == $scope.gameData.length - 1) {
                     return;
                 }
-
                 $scope.currentNum++;
             }
+
             $scope.back = function() {
                 if ($scope.currentNum == 0) return;
                 $scope.currentNum--;
+            }
+
+            function getCurrentLoginInfo() {
+                console.log(myDB)
+                myDB.login("joshoi", "joshoi", function(err, res) {
+                    console.log(res)
+                })
 
             }
 
