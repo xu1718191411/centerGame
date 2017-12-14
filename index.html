@@ -51,6 +51,86 @@
             left: 10;
             margin-top: -4px;
         }
+        
+        .form-style-6 {
+            font: 95% Arial, Helvetica, sans-serif;
+            max-width: 400px;
+            margin: 10px auto;
+            padding: 16px;
+            background: #F7F7F7;
+        }
+        
+        .form-style-6 h1 {
+            background: #43D1AF;
+            padding: 20px 0;
+            font-size: 140%;
+            font-weight: 300;
+            text-align: center;
+            color: #fff;
+            margin: -16px -16px 16px -16px;
+        }
+        
+        .form-style-6 input[type="text"],
+        .form-style-6 input[type="date"],
+        .form-style-6 input[type="datetime"],
+        .form-style-6 input[type="email"],
+        .form-style-6 input[type="number"],
+        .form-style-6 input[type="search"],
+        .form-style-6 input[type="time"],
+        .form-style-6 input[type="url"],
+        .form-style-6 textarea,
+        .form-style-6 select {
+            -webkit-transition: all 0.30s ease-in-out;
+            -moz-transition: all 0.30s ease-in-out;
+            -ms-transition: all 0.30s ease-in-out;
+            -o-transition: all 0.30s ease-in-out;
+            outline: none;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            width: 100%;
+            background: #fff;
+            margin-bottom: 4%;
+            border: 1px solid #ccc;
+            padding: 3%;
+            color: #555;
+            font: 95% Arial, Helvetica, sans-serif;
+        }
+        
+        .form-style-6 input[type="text"]:focus,
+        .form-style-6 input[type="date"]:focus,
+        .form-style-6 input[type="datetime"]:focus,
+        .form-style-6 input[type="email"]:focus,
+        .form-style-6 input[type="number"]:focus,
+        .form-style-6 input[type="search"]:focus,
+        .form-style-6 input[type="time"]:focus,
+        .form-style-6 input[type="url"]:focus,
+        .form-style-6 textarea:focus,
+        .form-style-6 select:focus {
+            box-shadow: 0 0 5px #43D1AF;
+            padding: 3%;
+            border: 1px solid #43D1AF;
+        }
+        
+        .form-style-6 input[type="submit"],
+        .form-style-6 input[type="button"] {
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            width: 100%;
+            padding: 3%;
+            background: #43D1AF;
+            border-bottom: 2px solid #30C29E;
+            border-top-style: none;
+            border-right-style: none;
+            border-left-style: none;
+            color: #fff;
+        }
+        
+        .form-style-6 input[type="submit"]:hover,
+        .form-style-6 input[type="button"]:hover {
+            background: #2EBC99;
+        }
     </style>
 </head>
 
@@ -58,6 +138,7 @@
 
     <ons-page>
         <div ng-controller="GameController">
+            {{answer}}
             <div class="toolbar">
                 <div class="toolbar__center">PTGAME(【真ん中当てクイズ】)</div>
             </div>
@@ -91,11 +172,51 @@
 
             <ons-row>
 
-                <div><input type="text" class="text-input text-input--underbar" ng-model="answer" value=""></div>
+
+                <div class="form-style-6" ng-show="currentNum == 0">
+                    <form>
+                        <ons-row>
+                            <ons-col>
+                                <input type="text" name="field1" ng-model="answer" placeholder="何時" />
+                                <input type="text" name="field1" ng-model="answer2" placeholder="何分" / </ons-col>
+                        </ons-row>
+                    </form>
+                </div>
+
+                <div class="form-style-6" ng-show="currentNum == 1">
+                    <form>
+                        <input type="text" name="field1" ng-model="answer" placeholder="何時間" />
+                        <input type="text" name="field1" ng-model="answer2" placeholder="何分" />
+                    </form>
+                </div>
+
+                <div class="form-style-6" ng-show="currentNum == 2">
+                    <form>
+                        <input type="text" name="field1" ng-model="answer" placeholder="日本円ですよ" />
+                    </form>
+                </div>
+
+                <div class="form-style-6" ng-show="currentNum == 3">
+                    <form>
+                        <input type="text" name="field1" ng-model="answer" placeholder="日本円ですよ" />
+                    </form>
+                </div>
+
+                <div class="form-style-6" ng-show="currentNum == 4">
+                    <form>
+                        <input type="text" name="field1" ng-model="answer" placeholder="ドールですよ" />
+                    </form>
+                </div>
+
+                <div class="form-style-6" ng-show="currentNum == 5">
+                    <form>
+                        secret
+                    </form>
+                </div>
 
             </ons-row>
             <ons-row>
-                <button class="button--large--cta" style="width: 100%; margin: 0 auto;" ng-click="submit()">サブミット</button>
+                <button class="button--large--cta" style="width: 100%; margin: 0 auto;" ng-disabled="buttonDisable" ng-click="submit()">サブミット</button>
             </ons-row>
         </div>
     </ons-page>
@@ -108,12 +229,11 @@
     var CLIENT_KEY = "4c5ff454f2fbf0bb0ed2b4088fa54f37602aba3744e6d6bc079a3886c44aa4e3";
     var ncmb = new NCMB(APPLICATION_KEY, CLIENT_KEY);
 
-
     var module = angular.module('apps', []);
 
     module
         .controller('GameController', function($scope) {
-
+            $scope.buttonDisable = false;
             login();
             $scope.currentNum = 0;
             $scope.currentUser = {}
@@ -132,12 +252,11 @@
             }, {
                 num: 4,
                 title: "「香川さんの一番の買い物の値段は？」"
-            }, {
-                num: 5,
-                title: "劇中には少年ジャンプの最新作や過去の名作が登場するなど“ジャンプ愛”が詰まった物語となる。(デイリースポーツ)"
             }]
 
             $scope.forward = function() {
+                $scope.buttonDisable = false;
+                $scope.answer = null;
                 if ($scope.currentNum == $scope.gameData.length - 1) {
                     return;
                 }
@@ -145,27 +264,39 @@
             }
 
             $scope.back = function() {
+                $scope.buttonDisable = false;
+                $scope.answer = null;
                 if ($scope.currentNum == 0) return;
                 $scope.currentNum--;
             }
 
             $scope.submit = function() {
+                $scope.buttonDisable = true;
                 console.log($scope.currentUser)
 
                 if (isEmpty($scope.currentUser)) {
                     alert("ログインされていない")
                 } else {
-                    alert("ログインしています")
 
                     getCurrentUser();
-                    myDB.insertIntoDataBase("response", {
-                        username: $scope.currentUser.userName,
-                        questionNum: $scope.currentNum,
-                        answer: $scope.answer
-                    }, function(err, res) {
-                        if (err) console.log(err)
 
-                        console.log(res)
+                    myDB.findAllData("response", {
+                        questionNum: $scope.currentNum,
+                        username: $scope.currentUser.userName
+                    }, function(err, res) {
+                        if (err) {
+                            console.log("err")
+                            alert("err in try to find the duplicated answer exists or not")
+                            return;
+                        }
+
+                        if (res.length > 0) {
+                            alert("you have already submited for this answer")
+                            return;
+                        }
+
+
+                        dealWithAndSubmitAnswer();
 
                     })
 
@@ -185,7 +316,6 @@
                 $scope.currentUser = currentUser;
             }
 
-
             function isEmpty(obj) {
                 for (var prop in obj) {
                     if (obj.hasOwnProperty(prop))
@@ -194,8 +324,55 @@
                 return true;
             }
 
+            function dealWithAndSubmitAnswer() {
+                var obj = {}
+                if ($scope.currentNum == 0) {
+                    obj = {
+                        answer: $scope.answer,
+                        answer2: $scope.answer2
+                    }
+                } else if ($scope.currentNum == 1) {
+                    obj = {
+                        answer: $scope.answer,
+                        answer2: $scope.answer2
+                    }
+                } else if ($scope.currentNum == 2) {
+                    obj = {
+                        answer: $scope.answer
+                    }
+                } else if ($scope.currentNum == 3) {
+                    obj = {
+                        answer: $scope.answer
+                    }
+                } else if ($scope.currentNum == 4) {
+                    obj = {
+                        answer: $scope.answer
+                    }
+                } else if ($scope.currentNum == 5) {
+
+                } else {
+
+                }
+
+
+
+                obj.username = $scope.currentUser.userName,
+                    obj.questionNum = $scope.currentNum,
+
+
+                    myDB.insertIntoDataBase("response", obj, function(err, res) {
+                        if (err) console.log(err)
+                        alert("答えました")
+                        $scope.buttonDisable = false;
+                    })
+
+
+            }
+
+
+
 
         });
 </script>
 
-</html>
+</h
