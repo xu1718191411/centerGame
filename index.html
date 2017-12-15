@@ -112,6 +112,12 @@
             border: 1px solid #43D1AF;
         }
         
+        .error {
+            color: red;
+            font-size: 16px;
+            line-height: 16px;
+        }
+        
         .form-style-6 input[type="submit"],
         .form-style-6 input[type="button"] {
             box-sizing: border-box;
@@ -138,7 +144,6 @@
 
     <ons-page>
         <div ng-controller="GameController">
-            {{answer}}
             <div class="toolbar">
                 <div class="toolbar__center">PTGAME(【真ん中当てクイズ】)</div>
             </div>
@@ -176,17 +181,23 @@
                 <div class="form-style-6" ng-show="currentNum == 0">
                     <form>
                         <ons-row>
-                            <ons-col>
-                                <input type="text" name="field1" ng-model="answer" placeholder="何時" />
-                                <input type="text" name="field1" ng-model="answer2" placeholder="何分" / </ons-col>
+
+                            <input type="text" name="field1" ng-model="answer" placeholder="何時" />
+                            <text class="error">{{error}}</text>
+
+                            <input type="text" name="field1" ng-model="answer2" placeholder="何分" />
+                            <text class="error">{{error2}}</text>
                         </ons-row>
+
                     </form>
                 </div>
 
                 <div class="form-style-6" ng-show="currentNum == 1">
                     <form>
                         <input type="text" name="field1" ng-model="answer" placeholder="何時間" />
+                        <text class="error">{{error}}</text>
                         <input type="text" name="field1" ng-model="answer2" placeholder="何分" />
+                        <text class="error">{{error2}}</text>
                     </form>
                 </div>
 
@@ -271,8 +282,17 @@
             }
 
             $scope.submit = function() {
-                $scope.buttonDisable = true;
+
                 console.log($scope.currentUser)
+
+
+                var verifyResult = verifyValue();
+
+
+                if (verifyResult.err) {
+                    return;
+                }
+
 
                 if (isEmpty($scope.currentUser)) {
                     alert("ログインされていない")
@@ -324,9 +344,52 @@
                 return true;
             }
 
+
+            function verifyValue() {
+
+                var resObj = {
+                    err: false
+                }
+
+                $scope.error = null;
+                $scope.error2 = null;
+                if ($scope.currentNum == 0 || $scope.currentNum == 1) {
+
+                    if (!isNumber($scope.answer) || $scope.answer == undefined) {
+                        resObj = {
+                            err: true
+                        }
+                        $scope.error = "数字を入力してください"
+                    }
+
+
+                    if (!isNumber($scope.answer2) || $scope.answer == undefined) {
+                        resObj = {
+                            err: true
+                        }
+                        $scope.error2 = "数字を入力してください"
+                    }
+
+                } else if ($scope.currentNum == 2) {
+
+                } else if ($scope.currentNum == 3) {
+
+                } else if ($scope.currentNum == 4) {
+
+                } else if ($scope.currentNum == 5) {
+
+                } else {
+
+                }
+
+                return resObj;
+
+            }
+
             function dealWithAndSubmitAnswer() {
                 var obj = {}
                 if ($scope.currentNum == 0) {
+
                     obj = {
                         answer: $scope.answer,
                         answer2: $scope.answer2
@@ -353,7 +416,7 @@
                 } else {
 
                 }
-
+                $scope.buttonDisable = true;
 
 
                 obj.username = $scope.currentUser.userName,
@@ -364,15 +427,16 @@
                         if (err) console.log(err)
                         alert("答えました")
                         $scope.buttonDisable = false;
-                    })
 
+                    })
 
             }
 
-
-
+            function isNumber(n) {
+                return !isNaN(parseFloat(n)) && isFinite(n);
+            }
 
         });
 </script>
 
-</h
+</html>
