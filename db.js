@@ -94,7 +94,6 @@ var myDB = {
 
     login: function(userName, password, cb) {
         var user = new ncmb.User({ userName: userName, password: password });
-        console.log({ userName: userName, password: password })
         ncmb.User.login(user)
             .then(function(data) {
                 // ログイン後処理

@@ -140,8 +140,10 @@
     </style>
 </head>
 
-<body ng-app="apps" class="container">
+<body class="container">
+    <ons-navigator swipeable var="myNavigator" page="login.page"></ons-navigator>
 
+    <template id="game.page">
     <ons-page>
         <div ng-controller="GameController">
             <div class="toolbar">
@@ -204,18 +206,21 @@
                 <div class="form-style-6" ng-show="currentNum == 2">
                     <form>
                         <input type="text" name="field1" ng-model="answer" placeholder="日本円ですよ" />
+                        <text class="error">{{error}}</text>
                     </form>
                 </div>
 
                 <div class="form-style-6" ng-show="currentNum == 3">
                     <form>
                         <input type="text" name="field1" ng-model="answer" placeholder="日本円ですよ" />
+                        <text class="error">{{error}}</text>
                     </form>
                 </div>
 
                 <div class="form-style-6" ng-show="currentNum == 4">
                     <form>
                         <input type="text" name="field1" ng-model="answer" placeholder="ドールですよ" />
+                        <text class="error">{{error}}</text>
                     </form>
                 </div>
 
@@ -230,8 +235,45 @@
                 <button class="button--large--cta" style="width: 100%; margin: 0 auto;" ng-disabled="buttonDisable" ng-click="submit()">サブミット</button>
             </ons-row>
         </div>
-    </ons-page>
 
+        <ons-dialog var="dialog">
+            <div style="text-align: center; padding: 10px;">
+              <p>
+                あなたはもう答えましたよ
+              </p>
+          
+              <p>
+                <ons-button ng-click="dialog.hide()">Close</ons-button>
+              </p>
+            </div>
+          </ons-dialog>
+
+    </ons-page>
+</template>
+
+<template id="login.page">
+    <ons-page>
+            <div ng-controller="LoginController" class="form-style-6 container">
+                <form>
+                <input type="text" name="field1" placeholder="VMKI" />
+                <input ng-click="login()" type="submit" value="始まろう" />
+                </form>
+            </div>
+
+
+            <ons-dialog var="dialog">
+                <div style="text-align: center; padding: 10px;">
+                    <p>
+                    ログイン失敗しました
+                    </p>
+                
+                    <p>
+                    <ons-button ng-click="dialog.hide()">Close</ons-button>
+                    </p>
+                </div>
+            </ons-dialog>
+    </ons-page>
+</template>
 
 </body>
 
@@ -240,14 +282,14 @@
     var CLIENT_KEY = "4c5ff454f2fbf0bb0ed2b4088fa54f37602aba3744e6d6bc079a3886c44aa4e3";
     var ncmb = new NCMB(APPLICATION_KEY, CLIENT_KEY);
 
-    var module = angular.module('apps', []);
+    //var module = angular.module('apps', []);
 
-    module
-        .controller('GameController', function($scope) {
+    var module = ons.bootstrap()
+    module.controller('GameController', function($scope) {
             $scope.buttonDisable = false;
-            login();
             $scope.currentNum = 0;
-            $scope.currentUser = {}
+            //$scope.currentUser = {}
+            getCurrentUser();
             $scope.gameData = [{
                 num: 0,
                 title: "　「休日朝起きる時間」→チュートリアル"
@@ -311,7 +353,8 @@
                         }
 
                         if (res.length > 0) {
-                            alert("you have already submited for this answer")
+                            //alert("you have already submited for this answer")
+                            dialog.show()
                             return;
                         }
 
@@ -323,12 +366,7 @@
                 }
             }
 
-            function login() {
-                myDB.login("joshoi", "joshoi", function(err, res) {
-                    console.log(res)
-                    $scope.currentUser = res;
-                })
-            }
+         
 
             function getCurrentUser() {
                 var currentUser = myDB.getCurrentUser()
@@ -363,20 +401,23 @@
                     }
 
 
-                    if (!isNumber($scope.answer2) || $scope.answer == undefined) {
+                    if (!isNumber($scope.answer2) || $scope.answer2 == undefined) {
                         resObj = {
                             err: true
                         }
                         $scope.error2 = "数字を入力してください"
                     }
 
-                } else if ($scope.currentNum == 2) {
+                } else if ($scope.currentNum == 2 || $scope.currentNum == 3 || $scope.currentNum == 4) {
 
-                } else if ($scope.currentNum == 3) {
 
-                } else if ($scope.currentNum == 4) {
+                    if (!isNumber($scope.answer) || $scope.answer == undefined) {
+                        resObj = {
+                            err: true
+                        }
+                        $scope.error = "数字を入力してください"
+                    }
 
-                } else if ($scope.currentNum == 5) {
 
                 } else {
 
@@ -394,23 +435,32 @@
                         answer: $scope.answer,
                         answer2: $scope.answer2
                     }
+
                 } else if ($scope.currentNum == 1) {
+
                     obj = {
                         answer: $scope.answer,
                         answer2: $scope.answer2
                     }
+
                 } else if ($scope.currentNum == 2) {
+
                     obj = {
                         answer: $scope.answer
                     }
+
                 } else if ($scope.currentNum == 3) {
+
                     obj = {
                         answer: $scope.answer
                     }
+
                 } else if ($scope.currentNum == 4) {
+
                     obj = {
                         answer: $scope.answer
                     }
+
                 } else if ($scope.currentNum == 5) {
 
                 } else {
@@ -436,7 +486,26 @@
                 return !isNaN(parseFloat(n)) && isFinite(n);
             }
 
-        });
+
+
+        })
+
+
+        module.controller('LoginController', function($scope) {
+                $scope.login = function(){
+                    myDB.login("joshoi","joshoi", function(err, res) {
+                        if(err){
+                            console.log(err);
+                            dialog.show();
+                            return;
+                        }
+                 
+                        $scope.currentUser = res;
+                      
+                        myNavigator.pushPage("game.page");
+                    })
+                }
+        })
 </script>
 
 </html>
