@@ -5,139 +5,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="onsenui/css/onsenui.css">
     <link rel="stylesheet" href="onsenui/css/onsen-css-components.min.css">
+    <link href="common.css" rel="stylesheet" type="text/css" media="all" />
     <script src="onsenui/js/onsenui.min.js"></script>
     <script src="./ncmb/ncmb.min.js"></script>
     <script src="./db.js"></script>
     <script src="angular.min.js"></script>
     <script src="onsenui/js/angular-onsenui.min.js"></script>
-
-    <style>
-        .arrow {
-            position: relative;
-            display: inline-block;
-            padding-left: 20px;
-            margin-top: 50px;
-        }
-        
-        .arrow::before {
-            content: '';
-            width: 30px;
-            height: 30px;
-            border: 10px;
-            border-top: solid 2px #5bc0de;
-            border-right: solid 2px #5bc0de;
-            transform: rotate(45deg);
-            position: absolute;
-            left: 0;
-            margin-top: -4px;
-        }
-        
-        .arrowL {
-            position: relative;
-            display: inline-block;
-            padding-left: 20px;
-            margin-top: 50px;
-        }
-        
-        .arrowL::before {
-            content: '';
-            width: 30px;
-            height: 30px;
-            border: 10px;
-            border-top: solid 2px #5bc0de;
-            border-right: solid 2px #5bc0de;
-            transform: rotate(-135deg);
-            position: absolute;
-            left: 10;
-            margin-top: -4px;
-        }
-        
-        .form-style-6 {
-            font: 95% Arial, Helvetica, sans-serif;
-            max-width: 400px;
-            margin: 10px auto;
-            padding: 16px;
-            background: #F7F7F7;
-        }
-        
-        .form-style-6 h1 {
-            background: #43D1AF;
-            padding: 20px 0;
-            font-size: 140%;
-            font-weight: 300;
-            text-align: center;
-            color: #fff;
-            margin: -16px -16px 16px -16px;
-        }
-        
-        .form-style-6 input[type="text"],
-        .form-style-6 input[type="date"],
-        .form-style-6 input[type="datetime"],
-        .form-style-6 input[type="email"],
-        .form-style-6 input[type="number"],
-        .form-style-6 input[type="search"],
-        .form-style-6 input[type="time"],
-        .form-style-6 input[type="url"],
-        .form-style-6 textarea,
-        .form-style-6 select {
-            -webkit-transition: all 0.30s ease-in-out;
-            -moz-transition: all 0.30s ease-in-out;
-            -ms-transition: all 0.30s ease-in-out;
-            -o-transition: all 0.30s ease-in-out;
-            outline: none;
-            box-sizing: border-box;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            width: 100%;
-            background: #fff;
-            margin-bottom: 4%;
-            border: 1px solid #ccc;
-            padding: 3%;
-            color: #555;
-            font: 95% Arial, Helvetica, sans-serif;
-        }
-        
-        .form-style-6 input[type="text"]:focus,
-        .form-style-6 input[type="date"]:focus,
-        .form-style-6 input[type="datetime"]:focus,
-        .form-style-6 input[type="email"]:focus,
-        .form-style-6 input[type="number"]:focus,
-        .form-style-6 input[type="search"]:focus,
-        .form-style-6 input[type="time"]:focus,
-        .form-style-6 input[type="url"]:focus,
-        .form-style-6 textarea:focus,
-        .form-style-6 select:focus {
-            box-shadow: 0 0 5px #43D1AF;
-            padding: 3%;
-            border: 1px solid #43D1AF;
-        }
-        
-        .error {
-            color: red;
-            font-size: 16px;
-            line-height: 16px;
-        }
-        
-        .form-style-6 input[type="submit"],
-        .form-style-6 input[type="button"] {
-            box-sizing: border-box;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            width: 100%;
-            padding: 3%;
-            background: #43D1AF;
-            border-bottom: 2px solid #30C29E;
-            border-top-style: none;
-            border-right-style: none;
-            border-left-style: none;
-            color: #fff;
-        }
-        
-        .form-style-6 input[type="submit"]:hover,
-        .form-style-6 input[type="button"]:hover {
-            background: #2EBC99;
-        }
-    </style>
+    <script src="./common.js"></script>
 </head>
 
 <body class="container">
@@ -149,7 +23,7 @@
             <div class="toolbar">
                 <div class="toolbar__center">PTGAME(【真ん中当てクイズ】)</div>
             </div>
-            </ons-row>
+   
             <ons-row>
                 <ons-col width="100%">
                     <div style="width:100%;height: 200px; padding: 1px 0 0 0;">
@@ -293,13 +167,7 @@
 </body>
 
 <script>
-    var APPLICATION_KEY = "e49d2a7325b1de31930285ecfceb148c6c07bd1b0ff87cc9ccb3e6836aeb7151";
-    var CLIENT_KEY = "4c5ff454f2fbf0bb0ed2b4088fa54f37602aba3744e6d6bc079a3886c44aa4e3";
-    var ncmb = new NCMB(APPLICATION_KEY, CLIENT_KEY);
 
-    //var module = angular.module('apps', []);
-
-    var module = ons.bootstrap()
     module.controller('GameController', function($scope) {
             $scope.buttonDisable = false;
             $scope.currentNum = 0;
