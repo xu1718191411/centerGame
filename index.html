@@ -248,6 +248,21 @@
             </div>
           </ons-dialog>
 
+
+          <ons-dialog var="dialog2">
+                <div style="text-align: center; padding: 10px;">
+                  <p>
+                    ありがとうございます
+                  </p>
+              
+                  <p>
+                    <ons-button ng-click="dialog2.hide()">Close</ons-button>
+                  </p>
+                </div>
+              </ons-dialog>
+
+
+
     </ons-page>
 </template>
 
@@ -255,7 +270,7 @@
     <ons-page>
             <div ng-controller="LoginController" class="form-style-6 container">
                 <form>
-                <input type="text" name="field1" placeholder="VMKI" />
+                <input type="text" ng-model="username" placeholder="VMKI" />
                 <input ng-click="login()" type="submit" value="始まろう" />
                 </form>
             </div>
@@ -288,8 +303,10 @@
     module.controller('GameController', function($scope) {
             $scope.buttonDisable = false;
             $scope.currentNum = 0;
+            $scope.alreadyResponse = []
             //$scope.currentUser = {}
             getCurrentUser();
+
             $scope.gameData = [{
                 num: 0,
                 title: "　「休日朝起きる時間」→チュートリアル"
@@ -308,33 +325,39 @@
             }]
 
             $scope.forward = function() {
+
                 $scope.buttonDisable = false;
                 $scope.answer = null;
+                $scope.answer2 = null;
                 if ($scope.currentNum == $scope.gameData.length - 1) {
+                    checkIfTheCurrentQuestionAlreadyResponsedOrNot();
                     return;
                 }
                 $scope.currentNum++;
+
+                checkIfTheCurrentQuestionAlreadyResponsedOrNot();
             }
 
             $scope.back = function() {
                 $scope.buttonDisable = false;
                 $scope.answer = null;
-                if ($scope.currentNum == 0) return;
+                $scope.answer2 = null;
+                if ($scope.currentNum == 0){
+                    checkIfTheCurrentQuestionAlreadyResponsedOrNot();
+                    return;
+                } 
                 $scope.currentNum--;
+                checkIfTheCurrentQuestionAlreadyResponsedOrNot();
             }
 
             $scope.submit = function() {
 
                 console.log($scope.currentUser)
-
-
                 var verifyResult = verifyValue();
-
 
                 if (verifyResult.err) {
                     return;
                 }
-
 
                 if (isEmpty($scope.currentUser)) {
                     alert("ログインされていない")
@@ -358,7 +381,6 @@
                             return;
                         }
 
-
                         dealWithAndSubmitAnswer();
 
                     })
@@ -366,12 +388,31 @@
                 }
             }
 
-         
+
+            function checkIfTheCurrentQuestionAlreadyResponsedOrNot(){
+                    var result = false;
+                    for(var i=0;i<$scope.alreadyResponse.length;i++){
+                        if($scope.alreadyResponse[i].questionNum == $scope.currentNum){
+                            $scope.buttonDisable = true;
+                            result = true;
+                        }
+                    }
+                    return result;
+            }
+
 
             function getCurrentUser() {
                 var currentUser = myDB.getCurrentUser()
                 console.log(currentUser)
                 $scope.currentUser = currentUser;
+
+                myDB.findAllData("response",{username:currentUser.userName},function(err,res){
+                    $scope.$apply(function(){
+                        $scope.alreadyResponse = res;
+                        checkIfTheCurrentQuestionAlreadyResponsedOrNot();
+                    })
+
+                })
             }
 
             function isEmpty(obj) {
@@ -468,32 +509,36 @@
                 }
                 $scope.buttonDisable = true;
 
-
                 obj.username = $scope.currentUser.userName,
                     obj.questionNum = $scope.currentNum,
-
-
                     myDB.insertIntoDataBase("response", obj, function(err, res) {
                         if (err) console.log(err)
-                        alert("答えました")
-                        $scope.buttonDisable = false;
+                        dialog2.show();
+                        if(isEmpty($scope.alreadyResponse[$scope.currentNum])){
+                            $scope.alreadyResponse[$scope.currentNum] = {questionNum:$scope.currentNum}
+                        }
+
+                        if($scope.currentNum == $scope.gameData.length - 1){
+                            $scope.buttonDisable = true;
+                        }else{
+                            $scope.forward();
+                            $scope.buttonDisable = false;
+                        }
+                        
 
                     })
-
             }
 
             function isNumber(n) {
                 return !isNaN(parseFloat(n)) && isFinite(n);
             }
 
-
-
         })
 
 
         module.controller('LoginController', function($scope) {
                 $scope.login = function(){
-                    myDB.login("joshoi","joshoi", function(err, res) {
+                    myDB.login($scope.username,$scope.username, function(err, res) {
                         if(err){
                             console.log(err);
                             dialog.show();
