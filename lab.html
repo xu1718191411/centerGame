@@ -13,225 +13,236 @@
     <script src="onsenui/js/angular-onsenui.min.js"></script>
     <script src="./common.js"></script>
     <style>
-        .pinpon{
-            background-color:greenyellow
+        .pinpon {
+            background-color: greenyellow
         }
     </style>
 </head>
+
 <body>
-        <div class="container">
-                <ons-page>
-                        <div ng-controller="AdminController">
-                        
-                            <ons-row>
-                                <div class="toolbar">
-                                        <div class="toolbar__center">PTGAME(【真ん中当てクイズ】答え公開)</div>
-                                </div>
-                            </ons-row>
+    <div class="container">
+        <ons-page>
+            <div ng-controller="AdminController">
+
+                <ons-row>
+                    <div class="toolbar">
+                        <div class="toolbar__center">PTGAME(【真ん中当てクイズ】答え公開)</div>
+                    </div>
+                </ons-row>
 
 
+                <ons-row>
+                    <ons-col width="100%">
+                        <div style="width:100%;height: 200px; padding: 1px 0 0 0;">
                             <ons-row>
-                                    <ons-col width="100%">
-                                        <div style="width:100%;height: 200px; padding: 1px 0 0 0;">
-                                            <ons-row>
-                                                <ons-col width="10%">
-                                                    <div class="arrowL" ng-click="back()"></div>
-                                                </ons-col>
-                    
-                                                <ons-col width="80%">
-                                                    <div class="card">
-                                                        <h2 class="card__title">第{{currentNum+1}}問</h2>
-                                                        <div class="card__content">
-                                                            {{gameData[currentNum].title}}
-                                                        </div>
-                                                    </div>
-                                                </ons-col>
-                    
-                    
-                                                <ons-col width="10%">
-                                                    <div class="arrow" ng-click="forward()"></div>
-                                                </ons-col>
-                                            </ons-row>
+                                <ons-col width="10%">
+                                    <div class="arrowL" ng-click="back()"></div>
+                                </ons-col>
+
+                                <ons-col width="80%">
+                                    <div class="card">
+                                        <h2 class="card__title">第{{currentNum+1}}問</h2>
+                                        <div class="card__content">
+                                            {{gameData[currentNum].title}}
                                         </div>
-                    
-                                    </ons-col>
+                                    </div>
+                                </ons-col>
+
+
+                                <ons-col width="10%">
+                                    <div class="arrow" ng-click="forward()"></div>
+                                </ons-col>
                             </ons-row>
-
-                            <ons-row>
-                                    <ons-button ng-click="public()" modifier="large">公開</ons-button>
-                            </ons-row>
-
-                            <ons-row>
-                                    公開結果   {{middle+1}}
-                            </ons-row>
-
-                            <ons-row ng-show="currentNum == 0 || currentNum == 1" >
-
-                                <ons-list-item ng-class="iconSort($index)"  ng-repeat="obj in currentResult track by $index">
-                                <div class="left">
-                                    {{$index+1}}
-                                </div>
-                                <div class="center">
-                                    {{obj.username}}
-                                </div>
-
-                                <div class="right">
-                                 
-                                        {{obj.answer}}時
-                                        {{obj.answer2}}分
-                                </div>
-
-                                </ons-list-item>
-
-                            </ons-row>
-
-
-                            <ons-row ng-show="currentNum == 2 || currentNum == 3 || currentNum == 4" >
-                                    
-                                <ons-list-item ng-class="iconSort($index)"  ng-repeat="obj in currentResult track by $index">
-                                <div class="left">
-                                    {{$index+1}}
-                                </div>
-                                <div class="center">
-                                    {{obj.username}}
-                                </div>
-
-                                <div class="right">
-                                        {{obj.answer}}円
-                                </div>
-
-                                </ons-list-item>
-                                    
-                            </ons-row>
-
-
                         </div>
-                </ons-page>
-        </div>
+
+                    </ons-col>
+                </ons-row>
+
+                <ons-row>
+                    <ons-button ng-click="public()" modifier="large">公開</ons-button>
+                </ons-row>
+
+                <ons-row>
+                    公開結果 {{middle}}
+                </ons-row>
+
+                <ons-row ng-show="currentNum == 0 || currentNum == 1">
+
+                    <ons-list-item ng-class="iconSort($index)" ng-repeat="obj in currentResult track by $index">
+                        <div class="left">
+                            {{$index}}
+                        </div>
+                        <div class="center">
+                            {{obj.username}}
+                        </div>
+                        <div class="center">
+                            {{obj.name}}
+                        </div>
+
+
+                        <div class="right">
+
+                            {{obj.answer}}時 {{obj.answer2}}分
+                        </div>
+
+                    </ons-list-item>
+
+                </ons-row>
+
+
+                <ons-row ng-show="currentNum == 2 || currentNum == 3 || currentNum == 4">
+
+                    <ons-list-item ng-class="iconSort($index)" ng-repeat="obj in currentResult track by $index">
+                        <div class="left">
+                            {{$index}}
+                        </div>
+                        <div class="center">
+                            {{obj.username}}
+                        </div>
+                        <div class="center">
+                            {{obj.name}}
+                        </div>
+
+                        <div class="right">
+                            {{obj.answer}}円
+                        </div>
+
+                    </ons-list-item>
+
+                </ons-row>
+
+
+            </div>
+        </ons-page>
+    </div>
 </body>
 
 <script>
-        module.controller('AdminController', function($scope) {
-                $scope.name = "syoui"
-                $scope.currentNum = 0;
+    module.controller('AdminController', function($scope) {
+        $scope.name = "syoui"
+        $scope.currentNum = 0;
 
-                 $scope.gameData = [{
-                        num: 0,
-                        title: "　「休日朝起きる時間」→チュートリアル"
-                    }, {
-                        num: 1,
-                        title: "「通勤時間」"
-                    }, {
-                        num: 2,
-                        title: "「理想の年収」"
-                    }, {
-                        num: 3,
-                        title: "「自分の今年一番の買い物の値段」"
-                    }, {
-                        num: 4,
-                        title: "「香川さんの一番の買い物の値段は？」"
-                    }
-                ]
+        $scope.gameData = [{
+            num: 0,
+            title: "　「休日朝起きる時間」→チュートリアル"
+        }, {
+            num: 1,
+            title: "「通勤時間」"
+        }, {
+            num: 2,
+            title: "「理想の年収」"
+        }, {
+            num: 3,
+            title: "「自分の今年一番の買い物の値段」"
+        }, {
+            num: 4,
+            title: "「香川さんの一番の買い物の値段は？」"
+        }]
 
 
-                $scope.forward = function() {
+        $scope.forward = function() {
 
-                    if ($scope.currentNum == $scope.gameData.length - 1) {
-                        return;
-                    }
-                    initial();
-                    $scope.currentNum++;
+            if ($scope.currentNum == $scope.gameData.length - 1) {
+                return;
+            }
+            initial();
+            $scope.currentNum++;
+        }
+
+        $scope.back = function() {
+
+            if ($scope.currentNum == 0) {
+                return;
+            }
+            initial()
+            $scope.currentNum--;
+        }
+
+        $scope.public = function() {
+            myDB.findAllData("response", {
+                questionNum: $scope.currentNum
+            }, function(err, res) {
+                $scope.$apply(function() {
+                    $scope.currentResult = res;
+                    dealWithCurrentResult();
+                })
+            })
+        }
+
+        function dealWithCurrentResult() {
+
+            //sort 
+            if ($scope.currentNum == 0 || $scope.currentNum == 1) {
+
+                $scope.currentResult.sort(function(obj1, obj2) {
+                    return (parseInt(obj2.answer) * 60 + parseInt(obj2.answer2)) - (parseInt(obj1.answer) * 60 + parseInt(obj1.answer2))
+                })
+
+                for (var i = 0; i < $scope.currentResult.length; i++) {
+                    console.log($scope.currentResult[i])
                 }
 
-                $scope.back = function() {
 
-                    if ($scope.currentNum == 0){
-                        return;
-                    } 
-                    initial()
-                    $scope.currentNum--;
-                }
+                //get the middle value
 
-                $scope.public = function(){
-                    myDB.findAllData("response",{questionNum:$scope.currentNum},function(err,res){
-                        $scope.$apply(function(){
-                            $scope.currentResult = res;
-                            dealWithCurrentResult();
-                        })
-                    })
-                }
+                if ($scope.currentResult.length % 2 == 1) {
+                    var middle = Math.floor($scope.currentResult.length / 2)
 
-                function dealWithCurrentResult(){
+                } else {
+                    //compare $scope.currentResult.length/2 - 1  and $scope.currentResult.length/2
+                    var val1 = $scope.currentResult.length / 2 - 1
+                    var val2 = $scope.currentResult.length / 2
+                    var compare1 = $scope.currentResult[val1]
+                    var compare2 = $scope.currentResult[val2]
+                    var value1 = parseInt(compare1.answer) * 60 + parseInt(compare1.answer2)
+                    var value2 = parseInt(compare2.answer) * 60 + parseInt(compare2.answer2)
 
-                    //sort 
-                    if($scope.currentNum == 0 || $scope.currentNum == 1){
-
-                                $scope.currentResult.sort(function(obj1,obj2){
-                                    return (parseInt(obj2.answer)*60+parseInt(obj2.answer2)) - (parseInt(obj1.answer)*60+parseInt(obj1.answer2))
-                                })
-
-                                for(var i=0;i<$scope.currentResult.length;i++){
-                                    console.log($scope.currentResult[i])
-                                }
-
-
-                                //get the middle value
-
-                                if($scope.currentResult.length % 2 == 1){
-                                    var middle = Math.floor($scope.currentResult.length)
-                                }else{
-                                    //compare $scope.currentResult.length/2 - 1  and $scope.currentResult.length/2
-                                    var val1 = $scope.currentResult.length/2 - 1
-                                    var val2 = $scope.currentResult.length/2
-                                    var compare1 = $scope.currentResult[val1]
-                                    var compare2 = $scope.currentResult[val2]
-                                    var value1 = parseInt(compare1.answer)*60 + parseInt(compare1.answer2)
-                                    var value2 = parseInt(compare2.answer)*60 + parseInt(compare2.answer2)
-                                    
-                                    var middle = value1 > value1?val1:val2
-                                }
-
-
-                                $scope.middle = middle;
-
-                    }else if($scope.currentNum == 2 || $scope.currentNum == 3 || $scope.currentNum == 4){
-                                $scope.currentResult.sort(function(obj1,obj2){
-                                    return (parseInt(obj2.answer)) - (parseInt(obj1.answer))
-                                })
-
-                                         //get the middle value
-
-                                if($scope.currentResult.length % 2 == 1){
-                                    var middle = Math.floor($scope.currentResult.length)
-                                }else{
-                                    //compare $scope.currentResult.length/2 - 1  and $scope.currentResult.length/2
-                                    var val1 = $scope.currentResult.length/2 - 1
-                                    var val2 = $scope.currentResult.length/2
-                                    var compare1 = $scope.currentResult[val1]
-                                    var compare2 = $scope.currentResult[val2]
-                                    var value1 = parseInt(compare1.answer)
-                                    var value2 = parseInt(compare2.answer)
-                                    
-                                    var middle = value1 > value1?val1:val2
-                                }
-
-                                $scope.middle = middle;
-
-                    }else{
-
-                    }
+                    var middle = value1 > value1 ? val1 : val2
 
                 }
 
-                $scope.iconSort = function(i){
-                    return i==$scope.middle?"pinpon":""
+
+                $scope.middle = middle;
+
+            } else if ($scope.currentNum == 2 || $scope.currentNum == 3 || $scope.currentNum == 4) {
+                $scope.currentResult.sort(function(obj1, obj2) {
+                    return (parseInt(obj2.answer)) - (parseInt(obj1.answer))
+                })
+
+                //get the middle value
+
+                if ($scope.currentResult.length % 2 == 1) {
+                    var middle = Math.floor($scope.currentResult.length / 2)
+                } else {
+                    //compare $scope.currentResult.length/2 - 1  and $scope.currentResult.length/2
+                    var val1 = $scope.currentResult.length / 2 - 1
+                    var val2 = $scope.currentResult.length / 2
+                    var compare1 = $scope.currentResult[val1]
+                    var compare2 = $scope.currentResult[val2]
+                    var value1 = parseInt(compare1.answer)
+                    var value2 = parseInt(compare2.answer)
+
+                    var middle = value1 > value1 ? val1 : val2
                 }
 
-                function initial(){
-                    $scope.currentResult = []
-                    $scope.middle = -1
-                }
+                $scope.middle = middle;
 
-        })
+            } else {
+
+            }
+
+        }
+
+        $scope.iconSort = function(i) {
+            return i == $scope.middle ? "pinpon" : ""
+        }
+
+        function initial() {
+            $scope.currentResult = []
+            $scope.middle = -1
+        }
+
+    })
 </script>
+
 </html>

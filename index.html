@@ -140,7 +140,7 @@
     </ons-page>
 </template>
 
-<template id="login.page">
+    <template id="login.page">
     <ons-page>
             <div ng-controller="LoginController" class="form-style-6 container">
                 <form>
@@ -167,258 +167,262 @@
 </body>
 
 <script>
-
     module.controller('GameController', function($scope) {
-            $scope.buttonDisable = false;
-            $scope.currentNum = 0;
-            $scope.alreadyResponse = []
+        $scope.buttonDisable = false;
+        $scope.currentNum = 0;
+        $scope.alreadyResponse = []
             //$scope.currentUser = {}
-            getCurrentUser();
+        getCurrentUser();
 
-            $scope.gameData = [{
-                num: 0,
-                title: "　「休日朝起きる時間」→チュートリアル"
-            }, {
-                num: 1,
-                title: "「通勤時間」"
-            }, {
-                num: 2,
-                title: "「理想の年収」"
-            }, {
-                num: 3,
-                title: "「自分の今年一番の買い物の値段」"
-            }, {
-                num: 4,
-                title: "「香川さんの一番の買い物の値段は？」"
-            }]
+        $scope.gameData = [{
+            num: 0,
+            title: "　「休日朝起きる時間」→チュートリアル"
+        }, {
+            num: 1,
+            title: "「通勤時間」"
+        }, {
+            num: 2,
+            title: "「理想の年収」"
+        }, {
+            num: 3,
+            title: "「自分の今年一番の買い物の値段」"
+        }, {
+            num: 4,
+            title: "「香川さんの一番の買い物の値段は？」"
+        }]
 
-            $scope.forward = function() {
+        $scope.forward = function() {
 
-                $scope.buttonDisable = false;
-                $scope.answer = null;
-                $scope.answer2 = null;
-                if ($scope.currentNum == $scope.gameData.length - 1) {
-                    checkIfTheCurrentQuestionAlreadyResponsedOrNot();
-                    return;
-                }
-                $scope.currentNum++;
-
+            $scope.buttonDisable = false;
+            $scope.answer = null;
+            $scope.answer2 = null;
+            if ($scope.currentNum == $scope.gameData.length - 1) {
                 checkIfTheCurrentQuestionAlreadyResponsedOrNot();
+                return;
             }
+            $scope.currentNum++;
 
-            $scope.back = function() {
-                $scope.buttonDisable = false;
-                $scope.answer = null;
-                $scope.answer2 = null;
-                if ($scope.currentNum == 0){
-                    checkIfTheCurrentQuestionAlreadyResponsedOrNot();
-                    return;
-                } 
-                $scope.currentNum--;
+            checkIfTheCurrentQuestionAlreadyResponsedOrNot();
+        }
+
+        $scope.back = function() {
+            $scope.buttonDisable = false;
+            $scope.answer = null;
+            $scope.answer2 = null;
+            if ($scope.currentNum == 0) {
                 checkIfTheCurrentQuestionAlreadyResponsedOrNot();
+                return;
+            }
+            $scope.currentNum--;
+            checkIfTheCurrentQuestionAlreadyResponsedOrNot();
+        }
+
+        $scope.submit = function() {
+
+            console.log($scope.currentUser)
+            var verifyResult = verifyValue();
+
+            if (verifyResult.err) {
+                return;
             }
 
-            $scope.submit = function() {
+            if (isEmpty($scope.currentUser)) {
+                alert("ログインされていない")
+            } else {
 
-                console.log($scope.currentUser)
-                var verifyResult = verifyValue();
+                getCurrentUser();
 
-                if (verifyResult.err) {
-                    return;
-                }
-
-                if (isEmpty($scope.currentUser)) {
-                    alert("ログインされていない")
-                } else {
-
-                    getCurrentUser();
-
-                    myDB.findAllData("response", {
-                        questionNum: $scope.currentNum,
-                        username: $scope.currentUser.userName
-                    }, function(err, res) {
-                        if (err) {
-                            console.log("err")
-                            alert("err in try to find the duplicated answer exists or not")
-                            return;
-                        }
-
-                        if (res.length > 0) {
-                            //alert("you have already submited for this answer")
-                            dialog.show()
-                            return;
-                        }
-
-                        dealWithAndSubmitAnswer();
-
-                    })
-
-                }
-            }
-
-
-            function checkIfTheCurrentQuestionAlreadyResponsedOrNot(){
-                    var result = false;
-                    for(var i=0;i<$scope.alreadyResponse.length;i++){
-                        if($scope.alreadyResponse[i].questionNum == $scope.currentNum){
-                            $scope.buttonDisable = true;
-                            result = true;
-                        }
+                myDB.findAllData("response", {
+                    questionNum: $scope.currentNum,
+                    username: $scope.currentUser.userName
+                }, function(err, res) {
+                    if (err) {
+                        console.log("err")
+                        alert("err in try to find the duplicated answer exists or not")
+                        return;
                     }
-                    return result;
-            }
 
+                    if (res.length > 0) {
+                        //alert("you have already submited for this answer")
+                        dialog.show()
+                        return;
+                    }
 
-            function getCurrentUser() {
-                var currentUser = myDB.getCurrentUser()
-                console.log(currentUser)
-                $scope.currentUser = currentUser;
-
-                myDB.findAllData("response",{username:currentUser.userName},function(err,res){
-                    $scope.$apply(function(){
-                        $scope.alreadyResponse = res;
-                        checkIfTheCurrentQuestionAlreadyResponsedOrNot();
-                    })
+                    dealWithAndSubmitAnswer();
 
                 })
+
+            }
+        }
+
+
+        function checkIfTheCurrentQuestionAlreadyResponsedOrNot() {
+            var result = false;
+            for (var i = 0; i < $scope.alreadyResponse.length; i++) {
+                if ($scope.alreadyResponse[i].questionNum == $scope.currentNum) {
+                    $scope.buttonDisable = true;
+                    result = true;
+                }
+            }
+            return result;
+        }
+
+
+        function getCurrentUser() {
+            var currentUser = myDB.getCurrentUser()
+            console.log(currentUser)
+            $scope.currentUser = currentUser;
+
+            myDB.findAllData("response", {
+                username: currentUser.userName
+            }, function(err, res) {
+                $scope.$apply(function() {
+                    $scope.alreadyResponse = res;
+                    checkIfTheCurrentQuestionAlreadyResponsedOrNot();
+                })
+
+            })
+        }
+
+        function isEmpty(obj) {
+            for (var prop in obj) {
+                if (obj.hasOwnProperty(prop))
+                    return false;
+            }
+            return true;
+        }
+
+
+        function verifyValue() {
+
+            var resObj = {
+                err: false
             }
 
-            function isEmpty(obj) {
-                for (var prop in obj) {
-                    if (obj.hasOwnProperty(prop))
-                        return false;
+            $scope.error = null;
+            $scope.error2 = null;
+            if ($scope.currentNum == 0 || $scope.currentNum == 1) {
+
+                if (!isNumber($scope.answer) || $scope.answer == undefined) {
+                    resObj = {
+                        err: true
+                    }
+                    $scope.error = "数字を入力してください"
                 }
-                return true;
+
+
+                if (!isNumber($scope.answer2) || $scope.answer2 == undefined) {
+                    resObj = {
+                        err: true
+                    }
+                    $scope.error2 = "数字を入力してください"
+                }
+
+            } else if ($scope.currentNum == 2 || $scope.currentNum == 3 || $scope.currentNum == 4) {
+
+
+                if (!isNumber($scope.answer) || $scope.answer == undefined) {
+                    resObj = {
+                        err: true
+                    }
+                    $scope.error = "数字を入力してください"
+                }
+
+
+            } else {
+
             }
 
+            return resObj;
 
-            function verifyValue() {
+        }
 
-                var resObj = {
-                    err: false
+        function dealWithAndSubmitAnswer() {
+            var obj = {}
+            if ($scope.currentNum == 0) {
+
+                obj = {
+                    answer: $scope.answer,
+                    answer2: $scope.answer2
                 }
 
-                $scope.error = null;
-                $scope.error2 = null;
-                if ($scope.currentNum == 0 || $scope.currentNum == 1) {
+            } else if ($scope.currentNum == 1) {
 
-                    if (!isNumber($scope.answer) || $scope.answer == undefined) {
-                        resObj = {
-                            err: true
-                        }
-                        $scope.error = "数字を入力してください"
+                obj = {
+                    answer: $scope.answer,
+                    answer2: $scope.answer2
+                }
+
+            } else if ($scope.currentNum == 2) {
+
+                obj = {
+                    answer: $scope.answer
+                }
+
+            } else if ($scope.currentNum == 3) {
+
+                obj = {
+                    answer: $scope.answer
+                }
+
+            } else if ($scope.currentNum == 4) {
+
+                obj = {
+                    answer: $scope.answer
+                }
+
+            } else if ($scope.currentNum == 5) {
+
+            } else {
+
+            }
+            $scope.buttonDisable = true;
+
+            obj.username = $scope.currentUser.userName,
+                obj.questionNum = $scope.currentNum,
+                obj.name = $scope.currentUser.name;
+            myDB.insertIntoDataBase("response", obj, function(err, res) {
+                if (err) console.log(err)
+                dialog2.show();
+                if (isEmpty($scope.alreadyResponse[$scope.currentNum])) {
+                    $scope.alreadyResponse[$scope.currentNum] = {
+                        questionNum: $scope.currentNum
                     }
+                }
 
-
-                    if (!isNumber($scope.answer2) || $scope.answer2 == undefined) {
-                        resObj = {
-                            err: true
-                        }
-                        $scope.error2 = "数字を入力してください"
-                    }
-
-                } else if ($scope.currentNum == 2 || $scope.currentNum == 3 || $scope.currentNum == 4) {
-
-
-                    if (!isNumber($scope.answer) || $scope.answer == undefined) {
-                        resObj = {
-                            err: true
-                        }
-                        $scope.error = "数字を入力してください"
-                    }
-
-
+                if ($scope.currentNum == $scope.gameData.length - 1) {
+                    $scope.buttonDisable = true;
                 } else {
-
+                    $scope.forward();
+                    $scope.buttonDisable = false;
                 }
 
-                return resObj;
 
-            }
+            })
+        }
 
-            function dealWithAndSubmitAnswer() {
-                var obj = {}
-                if ($scope.currentNum == 0) {
+        function isNumber(n) {
+            return !isNaN(parseFloat(n)) && isFinite(n);
+        }
 
-                    obj = {
-                        answer: $scope.answer,
-                        answer2: $scope.answer2
-                    }
+    })
 
-                } else if ($scope.currentNum == 1) {
 
-                    obj = {
-                        answer: $scope.answer,
-                        answer2: $scope.answer2
-                    }
-
-                } else if ($scope.currentNum == 2) {
-
-                    obj = {
-                        answer: $scope.answer
-                    }
-
-                } else if ($scope.currentNum == 3) {
-
-                    obj = {
-                        answer: $scope.answer
-                    }
-
-                } else if ($scope.currentNum == 4) {
-
-                    obj = {
-                        answer: $scope.answer
-                    }
-
-                } else if ($scope.currentNum == 5) {
-
-                } else {
-
+    module.controller('LoginController', function($scope) {
+        $scope.login = function() {
+            myDB.login($scope.username, $scope.username, function(err, res) {
+                if (err) {
+                    console.log(err);
+                    dialog.show();
+                    return;
                 }
-                $scope.buttonDisable = true;
 
-                obj.username = $scope.currentUser.userName,
-                    obj.questionNum = $scope.currentNum,
-                    myDB.insertIntoDataBase("response", obj, function(err, res) {
-                        if (err) console.log(err)
-                        dialog2.show();
-                        if(isEmpty($scope.alreadyResponse[$scope.currentNum])){
-                            $scope.alreadyResponse[$scope.currentNum] = {questionNum:$scope.currentNum}
-                        }
+                $scope.currentUser = res;
 
-                        if($scope.currentNum == $scope.gameData.length - 1){
-                            $scope.buttonDisable = true;
-                        }else{
-                            $scope.forward();
-                            $scope.buttonDisable = false;
-                        }
-                        
-
-                    })
-            }
-
-            function isNumber(n) {
-                return !isNaN(parseFloat(n)) && isFinite(n);
-            }
-
-        })
-
-
-        module.controller('LoginController', function($scope) {
-                $scope.login = function(){
-                    myDB.login($scope.username,$scope.username, function(err, res) {
-                        if(err){
-                            console.log(err);
-                            dialog.show();
-                            return;
-                        }
-                 
-                        $scope.currentUser = res;
-                      
-                        myNavigator.pushPage("game.page");
-                    })
-                }
-        })
+                myNavigator.pushPage("game.page");
+            })
+        }
+    })
 </script>
 
 </html>
