@@ -41,7 +41,6 @@
                                 </div>
                             </ons-col>
 
-
                             <ons-col width="10%">
                                 <div class="arrow" ng-click="forward()"></div>
                             </ons-col>
@@ -57,7 +56,6 @@
                 <div class="form-style-6" ng-show="currentNum == 0">
                     <form>
                         <ons-row>
-
                             <input type="text" name="field1" ng-model="answer" placeholder="何時" />
                             <text class="error">{{error}}</text>
 
@@ -93,7 +91,7 @@
 
                 <div class="form-style-6" ng-show="currentNum == 4">
                     <form>
-                        <input type="text" name="field1" ng-model="answer" placeholder="ドールですよ" />
+                        <input type="text" name="field1" ng-model="answer" placeholder="ドルですよ" />
                         <text class="error">{{error}}</text>
                     </form>
                 </div>
@@ -106,7 +104,7 @@
 
             </ons-row>
             <ons-row>
-                <button class="button--large--cta" style="width: 100%; margin: 0 auto;" ng-disabled="buttonDisable" ng-click="submit()">サブミット</button>
+                <button class="button--large--cta" style="width: 100%; margin: 0 auto;" ng-disabled="buttonDisable" ng-click="submit()">スタート</button>
             </ons-row>
         </div>
 
@@ -188,7 +186,7 @@
             title: "「自分の今年一番の買い物の値段」"
         }, {
             num: 4,
-            title: "「香川さんの一番の買い物の値段は？」"
+            title: "「香川さんの去年一番の買い物の値段は？」"
         }]
 
         $scope.forward = function() {
