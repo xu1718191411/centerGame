@@ -16,6 +16,12 @@
         .pinpon {
             background-color: greenyellow
         }
+        
+        .pic {
+            width: 40%;
+            height: auto;
+            margin: 0 auto;
+        }
     </style>
 </head>
 
@@ -58,6 +64,8 @@
                     </ons-col>
                 </ons-row>
 
+
+
                 <ons-row>
                     <ons-button ng-click="public()" modifier="large">公開</ons-button>
                 </ons-row>
@@ -90,7 +98,7 @@
                 </ons-row>
 
 
-                <ons-row ng-show="currentNum == 2 || currentNum == 3 || currentNum == 4">
+                <ons-row ng-show="currentNum == 2 || currentNum == 3 || currentNum == 4 || currentNum == 5">
 
                     <ons-list-item ng-class="iconSort($index)" ng-repeat="obj in currentResult track by $index">
                         <div class="left">
@@ -109,8 +117,34 @@
 
                     </ons-list-item>
 
+
+
                 </ons-row>
 
+
+                <ons-row ng-show="currentNum == 6">
+
+
+                    <ul class="list list--material">
+                        <li class="list-item list-item--material">
+                            <div class="list-item__left">2</div>
+                            <div class="list-item__center">
+                                <img class="pic" src="./kagawa.jpg">
+                            </div>
+
+                        </li>
+                        <li class="list-item list-item--material">
+                            <div class="list-item__left">1</div>
+                            <div class="list-item__center">
+                                <img class="pic" src="./wedding.jpg">
+                            </div>
+                        </li>
+                    </ul>
+
+
+
+
+                </ons-row>
 
             </div>
         </ons-page>
@@ -137,6 +171,12 @@
         }, {
             num: 4,
             title: "「香川さんの一番の買い物の値段は？」"
+        }, {
+            num: 5,
+            title: "このアナログゲームはいくらですか?"
+        }, {
+            num: 6,
+            title: "名古屋Lab 香川さんご結婚おめでとうございます！！！"
         }]
 
 

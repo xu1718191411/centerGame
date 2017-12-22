@@ -13,6 +13,14 @@
     <script src="onsenui/js/angular-onsenui.min.js"></script>
     <script src="./common.js"></script>
 </head>
+<style>
+    .pic {
+        width: 40%;
+        height: auto;
+        margin: 0 auto;
+        margin-left: 30px
+    }
+</style>
 
 <body class="container">
     <ons-navigator swipeable var="myNavigator" page="login.page"></ons-navigator>
@@ -98,7 +106,13 @@
 
                 <div class="form-style-6" ng-show="currentNum == 5">
                     <form>
-                        secret
+                        <form>
+                            <input type="text" name="field1" ng-model="answer" placeholder="日本円ですよ" />
+                            <text class="error">{{error}}</text>
+                            <div style="width:80%"
+                                <img class="pic" src="./game.jpg">
+                            </div>
+                        </form>
                     </form>
                 </div>
 
@@ -187,6 +201,9 @@
         }, {
             num: 4,
             title: "「香川さんの去年一番の買い物の値段は？」"
+        }, {
+            num: 5,
+            title: "このアナログゲームはいくらですか?"
         }]
 
         $scope.forward = function() {
@@ -316,7 +333,7 @@
                     $scope.error2 = "数字を入力してください"
                 }
 
-            } else if ($scope.currentNum == 2 || $scope.currentNum == 3 || $scope.currentNum == 4) {
+            } else if ($scope.currentNum == 2 || $scope.currentNum == 3 || $scope.currentNum == 4 || $scope.currentNum == 5) {
 
 
                 if (!isNumber($scope.answer) || $scope.answer == undefined) {
@@ -370,7 +387,9 @@
                 }
 
             } else if ($scope.currentNum == 5) {
-
+                obj = {
+                    answer: $scope.answer
+                }
             } else {
 
             }
